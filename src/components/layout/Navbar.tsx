@@ -7,11 +7,14 @@ import { Button } from "../ui/Button";
 import { cn } from "@/src/lib/utils";
 import { MobileMenu } from "./MobileMenu";
 import { Logo } from "../ui/Logo";
+import { DesktopSearch } from "./DesktopSearch";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isSearchActive, setIsSearchActive] = useState(false);
+
   const lastYRef = useRef(0);
 
   useEffect(() => {
@@ -35,16 +38,21 @@ export const Navbar = () => {
     <>
       <header
         className={cn(
-          "fixed top-0 z-50 w-full transition-all duration-300 ease-in-out border-b",
+          "fixed top-0 z-50 w-full transition-all duration-300 ease-in-out",
           isHidden ? "-translate-y-full" : "translate-y-0",
           isScrolled
-            ? "bg-white/95 dark:bg-slate-950/90 backdrop-blur-md border-slate-200 dark:border-slate-800 shadow-sm py-3"
-            : "bg-white dark:bg-slate-950 border-slate-100 dark:border-slate-900 py-4 md:py-5",
+            ? "bg-white/95 dark:bg-slate-950/90 backdrop-blur-md shadow-sm py-3"
+            : "bg-white dark:bg-slate-950 py-4 md:py-5",
         )}
       >
-        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between">
-          {/* 1. Lado Izquierdo: Menú Móvil (Solo visible en móviles) y LOGO */}
-          <div className="flex items-center gap-2">
+        {/* EL EFECTO "VIVO" MEJORADO: Mayor grosor, resplandor y colores puros */}
+        <div className="absolute bottom-0 left-0 w-full h-[4px] bg-slate-100 dark:bg-slate-800/30">
+          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-star-blue to-transparent animate-pulse shadow-[0_0_8px_rgba(37,99,235,0.6)]"></div>
+        </div>
+
+        <div className="max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 flex items-center justify-between relative">
+          {/* 1. Izquierda */}
+          <div className="flex items-center gap-2 z-30 relative">
             <Button
               variant="ghost"
               className="md:hidden p-2 text-slate-900 dark:text-white -ml-2"
@@ -57,9 +65,14 @@ export const Navbar = () => {
             </div>
           </div>
 
-          {/* 2. Centro: Navegación Principal (El "MegaMenu" desglosado) - Solo Desktop */}
-          <nav className="hidden md:flex flex-1 items-center justify-center gap-8 pl-8">
-            {/* Desplegable Palas */}
+          {/* 2. Centro: Navegación Principal */}
+          <nav
+            className={cn(
+              "hidden md:flex flex-1 items-center justify-center gap-8 pl-8 transition-opacity duration-200",
+              isSearchActive ? "opacity-0 pointer-events-none" : "opacity-100",
+            )}
+          >
+            {/* --- Desplegable Palas --- */}
             <div className="relative group py-2">
               <Link
                 href="/palas"
@@ -74,7 +87,7 @@ export const Navbar = () => {
                     <Link
                       key={m}
                       href={`/palas/${m.toLowerCase()}`}
-                      className="px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-star-blue dark:hover:text-star-blue hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
+                      className="px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-star-blue hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
                     >
                       {m}
                     </Link>
@@ -90,7 +103,7 @@ export const Navbar = () => {
               </div>
             </div>
 
-            {/* Desplegable Indumentaria */}
+            {/* --- Desplegable Indumentaria --- */}
             <div className="relative group py-2">
               <Link
                 href="/indumentaria"
@@ -123,12 +136,11 @@ export const Navbar = () => {
               </div>
             </div>
 
-            {/* Accesos Directos sin desplegable (Mejora la velocidad de navegación) */}
             <Link
               href="/calzados"
               className="text-sm font-bold text-slate-900 dark:text-white hover:text-star-blue transition-colors uppercase tracking-tight py-2"
             >
-              Calzados
+              Calzado
             </Link>
 
             <Link
@@ -138,7 +150,6 @@ export const Navbar = () => {
               Accesorios
             </Link>
 
-            {/* Destacado / Ofertas */}
             <Link
               href="/ofertas"
               className="text-sm font-bold text-star-red hover:text-red-700 transition-colors uppercase tracking-tight py-2 ml-4"
@@ -147,14 +158,25 @@ export const Navbar = () => {
             </Link>
           </nav>
 
-          {/* 3. Lado Derecho: Acciones de usuario */}
-          <div className="flex items-center justify-end gap-0.5 sm:gap-2">
-            <Button
-              variant="ghost"
-              className="hidden md:flex p-1.5 sm:p-2 text-slate-900 dark:text-white hover:text-star-blue transition-colors"
-            >
-              <Search className="w-5 h-5 sm:w-6 sm:h-6" />
-            </Button>
+          {/* Componente Flotante de Búsqueda */}
+          <div className="hidden md:block">
+            <DesktopSearch
+              isActive={isSearchActive}
+              onClose={() => setIsSearchActive(false)}
+            />
+          </div>
+
+          {/* 3. Derecha: Acciones */}
+          <div className="flex items-center justify-end gap-0.5 sm:gap-2 z-30 relative">
+            {!isSearchActive && (
+              <Button
+                variant="ghost"
+                onClick={() => setIsSearchActive(true)}
+                className="hidden md:flex p-1.5 sm:p-2 text-slate-900 dark:text-white hover:text-star-blue transition-colors"
+              >
+                <Search className="w-5 h-5 sm:w-6 sm:h-6" />
+              </Button>
+            )}
 
             <Button
               variant="ghost"
@@ -176,7 +198,6 @@ export const Navbar = () => {
         </div>
       </header>
 
-      {/* Menú Móvil sigue gestionando la vista de teléfono */}
       <MobileMenu
         isOpen={isMobileMenuOpen}
         onClose={() => setIsMobileMenuOpen(false)}
