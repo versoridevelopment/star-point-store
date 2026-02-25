@@ -16,7 +16,7 @@ export const MegaMenu = () => {
           {/* Columna 1: Palas por Marca */}
           <div className="flex flex-col h-full">
             <h3 className="text-xs font-black text-slate-400 uppercase tracking-wider mb-3 border-b border-slate-100 dark:border-slate-800 pb-2">
-              Palas por Marca
+              Palas
             </h3>
             <div className="flex flex-col gap-2 flex-grow text-sm font-medium text-slate-600 dark:text-slate-300">
               <Link
