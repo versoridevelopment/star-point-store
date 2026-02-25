@@ -1,0 +1,44 @@
+@import "tailwindcss";
+
+:root {
+  /* Lienzo en blanco estricto */
+  --background: #ffffff;
+  --foreground: #0f172a; /* Equivalente a slate-900, mejor contraste que el negro puro */
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+
+  /* Inyectamos la paleta de Star Point directamente al motor de Tailwind */
+  --color-star-blue: #2563eb; /* Azul comercial (blue-600) */
+  --color-star-yellow: #facc15; /* Amarillo para CTA (yellow-400) */
+  --color-star-red: #dc2626; /* Rojo para alertas/exclusivo (red-600) */
+}
+
+/* Forzamos el modo claro: 
+   Incluso si el sistema operativo del usuario está en Dark Mode, 
+   la página mantendrá el fondo blanco para priorizar la conversión y los productos. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #ffffff;
+    --foreground: #0f172a;
+  }
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), Arial, Helvetica, sans-serif;
+  /* Optimizaciones de renderizado tipográfico para una lectura más limpia */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Detalle premium en la selección de texto */
+::selection {
+  background-color: var(--color-star-yellow);
+  color: #0f172a;
+}
