@@ -7,6 +7,7 @@ import { Button } from "../ui/Button";
 import { cn } from "@/src/lib/utils";
 import { MegaMenu } from "./MegaMenu";
 import { MobileMenu } from "./MobileMenu";
+import { Logo } from "../ui/Logo";
 
 export const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -56,21 +57,9 @@ export const Navbar = () => {
             <MegaMenu />
           </div>
 
-          {/* Centro: Logo */}
-          <div className="flex-shrink-0 flex items-center justify-center mt-1">
-            <Link href="/" className="flex items-start group">
-              <div className="flex items-baseline tracking-tighter">
-                <span className="text-xl md:text-3xl font-black text-star-blue uppercase">
-                  STAR
-                </span>
-                <span className="text-xl md:text-3xl font-black text-slate-900 dark:text-white uppercase">
-                  POINT
-                </span>
-              </div>
-              <span className="ml-1 mt-0.5 text-[8px] md:text-[9px] font-bold uppercase tracking-widest bg-gradient-to-r from-star-yellow to-star-red text-transparent bg-clip-text">
-                Store
-              </span>
-            </Link>
+          {/* Centro: Logo Componentizado */}
+          <div className="flex-shrink-0 flex items-center justify-center">
+            <Logo />
           </div>
 
           {/* Lado Derecho: Acciones (Visibles en Móvil) */}
