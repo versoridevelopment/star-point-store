@@ -132,7 +132,7 @@ export const PaymentBar = () => (
 export const ShippingBar = () => (
   <LazyMotion features={domAnimation}>
     <InfiniteSeparator
-      title="Envíos al país"
+      title="Envíos a todo el país"
       icon={<Truck />}
       items={SHIPPING_METHODS}
       direction="right"
