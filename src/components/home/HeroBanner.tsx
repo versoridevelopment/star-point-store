@@ -8,11 +8,9 @@ import { mockProducts } from "@/src/data/mockProducts";
 import { Placeholder } from "../ui/Placeholder";
 
 export const HeroBanner = () => {
-  // 1. Lógica de Datos: Filtramos los productos nuevos y tomamos los top 3
   const featuredProducts = mockProducts.filter((p) => p.isNew).slice(0, 3);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // 2. Auto-Play del carrusel (5 segundos)
   useEffect(() => {
     if (featuredProducts.length <= 1) return;
     const timer = setInterval(() => {
@@ -32,13 +30,11 @@ export const HeroBanner = () => {
 
   const currentProduct = featuredProducts[currentIndex];
 
-  // 3. Generación de Descripción Dinámica basada en los metadatos del producto
   const dynamicDescription =
     currentProduct.category === "palas"
       ? `Experimenta el máximo rendimiento con la nueva ${currentProduct.name}. Diseñada para un juego de ${currentProduct.tags[0] || "alto nivel"} gracias a su forma ${currentProduct.specs?.forma?.toLowerCase() || "innovadora"} y balance ${currentProduct.specs?.balance?.toLowerCase() || "perfecto"}.`
       : `Descubre la última innovación de ${currentProduct.brand}. ${currentProduct.name} se une a nuestro catálogo para llevar tu equipamiento al siguiente nivel.`;
 
-  // Formateador de precios
   const formatPrice = (price: number) =>
     new Intl.NumberFormat("es-AR", {
       style: "currency",
@@ -48,8 +44,11 @@ export const HeroBanner = () => {
 
   return (
     <LazyMotion features={domAnimation}>
-      {/* CONTENEDOR FULL-WIDTH (Ocupa el 100% de la pantalla horizontalmente) */}
-      <section className="relative w-full bg-slate-900 mt-[72px] md:mt-[88px] overflow-hidden group">
+      {/* CORRECCIÓN CLAVE AQUÍ: 
+        Quitamos cualquier "mt-" (margin) y usamos exclusivamente "pt-" (padding).
+        Esto garantiza que el fondo azul oscuro comience en la línea 0 de la pantalla.
+      */}
+      <section className="relative w-full bg-slate-900 pt-[80px] md:pt-[96px] pb-12 overflow-hidden group">
         {/* Fondos Decorativos Estáticos */}
         <div className="absolute top-0 left-0 w-full h-full pointer-events-none opacity-50">
           <div className="absolute -top-[30%] -left-[10%] w-[60%] h-[60%] rounded-full bg-star-blue/20 blur-[120px]"></div>
@@ -63,11 +62,11 @@ export const HeroBanner = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="relative w-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-12 md:py-20 lg:py-24 flex flex-col md:flex-row items-center"
+            className="relative w-full max-w-screen-2xl mx-auto px-4 sm:px-6 md:px-8 py-8 md:py-16 lg:py-20 flex flex-col md:flex-row items-center"
           >
             {/* TEXTOS Y CALL TO ACTION */}
             <div className="w-full md:w-1/2 flex flex-col justify-center text-center md:text-left z-10 order-2 md:order-1 mt-8 md:mt-0 pr-0 md:pr-12">
-              <div className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 text-star-yellow text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6 mx-auto md:mx-0 w-fit backdrop-blur-sm">
+              <div className="inline-flex items-center gap-1.5 bg-white/10 border border-white/20 text-star-yellow text-xs font-bold uppercase tracking-widest px-3 py-1.5 rounded-full mb-6 mx-auto md:mx-0 w-fit backdrop-blur-sm shadow-sm">
                 <Zap className="w-3.5 h-3.5 fill-star-yellow" />
                 Lanzamiento Exclusivo
               </div>

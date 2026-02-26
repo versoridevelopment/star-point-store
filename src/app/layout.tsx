@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Montserrat } from "next/font/google";
 import "./globals.css";
+
+// Importamos el Navbar que construimos
 import { Navbar } from "../components/layout/Navbar";
 
-// Cambiamos a Inter para un look más atlético y de e-commerce tradicional
-const inter = Inter({
+// Configuramos la fuente
+const montserrat = Montserrat({
   subsets: ["latin"],
-  variable: "--font-inter",
-  display: "swap", // Optimización para que el texto no parpadee al cargar
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Star Point Store | Equipamiento Multimarca de Pádel",
-  description:
-    "Encuentra las mejores palas, calzado y accesorios de las marcas líderes del circuito.",
+  title: "Star Point Store",
+  description: "E-commerce premium de equipamiento deportivo",
 };
 
 export default function RootLayout({
@@ -24,10 +24,15 @@ export default function RootLayout({
   return (
     <html lang="es">
       <body
-        className={`${inter.variable} font-sans antialiased flex flex-col min-h-screen`}
+        className={`${montserrat.className} bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-white antialiased flex flex-col min-h-screen`}
       >
+        {/* El Navbar global se renderiza en todas las páginas */}
         <Navbar />
-        <div className="flex-grow pt-16 md:pt-20">{children}</div>
+
+        {/* El contenido específico de cada página (como el Home) se inyecta aquí */}
+        <div className="flex-1 flex flex-col">{children}</div>
+
+        {/* Aquí agregaremos el Footer global más adelante */}
       </body>
     </html>
   );
