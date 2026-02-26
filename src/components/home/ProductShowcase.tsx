@@ -1,5 +1,4 @@
 import { ProductCard } from "../product/ProductCard";
-// Importamos la fuente de verdad global (Asegúrate de que la ruta sea correcta)
 import { mockProducts } from "../../data/mockProducts";
 
 interface ProductShowcaseProps {
