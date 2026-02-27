@@ -75,7 +75,7 @@ export const Navbar = () => {
             {/* --- Desplegable Palas --- */}
             <div className="relative group py-2">
               <Link
-                href="/palas"
+                href="/catalogo?categoria=palas"
                 className="flex items-center gap-1 text-sm font-bold text-slate-900 dark:text-white hover:text-star-blue transition-colors uppercase tracking-tight"
               >
                 Palas{" "}
@@ -83,10 +83,11 @@ export const Navbar = () => {
               </Link>
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-48 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 overflow-hidden z-50">
                 <div className="flex flex-col py-2">
+                  {/* Filtro combinado: Categoría + Marca */}
                   {["Bullpadel", "Nox", "Adidas", "Head", "Trexx"].map((m) => (
                     <Link
                       key={m}
-                      href={`/palas/${m.toLowerCase()}`}
+                      href={`/catalogo?categoria=palas&marca=${m.toLowerCase()}`}
                       className="px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-star-blue hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
                     >
                       {m}
@@ -94,7 +95,7 @@ export const Navbar = () => {
                   ))}
                   <div className="h-px bg-slate-100 dark:bg-slate-800 my-1 mx-4"></div>
                   <Link
-                    href="/palas"
+                    href="/catalogo?categoria=palas"
                     className="px-4 py-2 text-xs font-bold text-star-blue hover:text-blue-800 transition-colors"
                   >
                     Ver todas
@@ -106,7 +107,7 @@ export const Navbar = () => {
             {/* --- Desplegable Indumentaria --- */}
             <div className="relative group py-2">
               <Link
-                href="/indumentaria"
+                href="/catalogo?categoria=indumentaria"
                 className="flex items-center gap-1 text-sm font-bold text-slate-900 dark:text-white hover:text-star-blue transition-colors uppercase tracking-tight"
               >
                 Indumentaria{" "}
@@ -114,20 +115,21 @@ export const Navbar = () => {
               </Link>
               <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 w-48 bg-white dark:bg-slate-950 border border-slate-200 dark:border-slate-800 shadow-xl rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 overflow-hidden z-50">
                 <div className="flex flex-col py-2">
+                  {/* Filtro combinado: Categoría + Género */}
                   <Link
-                    href="/indumentaria/masculino"
+                    href="/catalogo?categoria=indumentaria&genero=masculino"
                     className="px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-star-blue hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
                   >
                     Masculino
                   </Link>
                   <Link
-                    href="/indumentaria/femenino"
+                    href="/catalogo?categoria=indumentaria&genero=femenino"
                     className="px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-star-blue hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
                   >
                     Femenino
                   </Link>
                   <Link
-                    href="/indumentaria/sin-genero"
+                    href="/catalogo?categoria=indumentaria&genero=unisex"
                     className="px-4 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-300 hover:text-star-blue hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors"
                   >
                     Sin Género
@@ -136,22 +138,25 @@ export const Navbar = () => {
               </div>
             </div>
 
+            {/* --- Calzado --- */}
             <Link
-              href="/calzados"
+              href="/catalogo?categoria=calzado"
               className="text-sm font-bold text-slate-900 dark:text-white hover:text-star-blue transition-colors uppercase tracking-tight py-2"
             >
               Calzado
             </Link>
 
+            {/* --- Accesorios --- */}
             <Link
-              href="/accesorios"
+              href="/catalogo?categoria=accesorios"
               className="text-sm font-bold text-slate-900 dark:text-white hover:text-star-blue transition-colors uppercase tracking-tight py-2"
             >
               Accesorios
             </Link>
 
+            {/* --- Ofertas --- */}
             <Link
-              href="/ofertas"
+              href="/catalogo?ofertas=true"
               className="text-sm font-bold text-star-red hover:text-red-700 transition-colors uppercase tracking-tight py-2 ml-4"
             >
               Ofertas
@@ -190,6 +195,7 @@ export const Navbar = () => {
               className="relative p-1.5 sm:p-2 text-slate-900 dark:text-white hover:text-star-blue transition-colors group"
             >
               <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 group-hover:scale-110 transition-transform" />
+              {/* Este es el contador que conectaremos con Zustand */}
               <span className="absolute top-0 right-0 w-4 h-4 bg-star-red text-white text-[10px] font-bold flex items-center justify-center rounded-full shadow-sm border border-white dark:border-slate-950">
                 0
               </span>
