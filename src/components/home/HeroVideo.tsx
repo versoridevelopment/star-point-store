@@ -19,8 +19,9 @@ export const HeroVideo = () => {
             - playsinline=1: VITAL. Evita que iOS abra el video a pantalla completa.
             - rel=0: Evita que muestre videos de otros canales al final.
             - iv_load_policy=3: Oculta anotaciones y tarjetas.
+            - start=3: NUEVO. Inicia el video a los 3 segundos para saltar introducciones.
           */
-          src="https://www.youtube.com/embed/0n_ZBeysGB8?autoplay=1&mute=1&controls=0&loop=1&playlist=0n_ZBeysGB8&playsinline=1&rel=0&showinfo=0&disablekb=1&fs=0&iv_load_policy=3"
+          src="https://www.youtube.com/embed/0n_ZBeysGB8?autoplay=1&mute=1&controls=0&loop=1&playlist=0n_ZBeysGB8&playsinline=1&rel=0&showinfo=0&disablekb=1&fs=0&iv_load_policy=3&start=3"
           allow="autoplay; encrypted-media"
           title="Video de presentación Star Point"
           /* EL TRUCO DE ESCALADO CSS PARA SIMULAR "object-cover":
@@ -64,14 +65,14 @@ export const HeroVideo = () => {
         {/* Botones de Acción */}
         <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
           <Link
-            href="/palas"
+            href="/catalogo?categoria=palas"
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-white text-slate-900 px-8 py-4 rounded-xl text-sm font-black uppercase tracking-widest hover:bg-star-blue hover:text-white transition-all active:scale-95 shadow-xl"
           >
             Ver Colección <ArrowRight className="w-4 h-4" />
           </Link>
 
           <Link
-            href="/ofertas"
+            href="/catalogo?ofertas=true"
             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-slate-900/40 text-white border border-white/20 backdrop-blur-md px-8 py-4 rounded-xl text-sm font-bold uppercase tracking-widest hover:bg-white/20 transition-all active:scale-95 shadow-xl"
           >
             <Play className="w-4 h-4" /> Ofertas
