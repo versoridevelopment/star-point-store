@@ -6,8 +6,8 @@ export type FiltrosState = {
   categoria: string | null;
   marcas: string[];
   genero: string | null;
-  precioMin: string;
-  precioMax: string;
+  precioMin: number; // NUEVO: Precio Mínimo
+  precioMax: number;
   soloOfertas: boolean;
 };
 
@@ -18,6 +18,8 @@ interface FilterSidebarProps {
   setFiltros: (filtros: FiltrosState) => void;
   categoriasDisponibles: string[];
   marcasDisponibles: string[];
+  precioMinimoHistorico: number; // NUEVO: Base de la BD
+  precioMaximoHistorico: number;
 }
 
 const GENEROS = ["masculino", "femenino", "unisex"];
@@ -25,6 +27,8 @@ const GENEROS = ["masculino", "femenino", "unisex"];
 interface FilterContentProps {
   categoriasDisponibles: string[];
   marcasDisponibles: string[];
+  precioMinimoHistorico: number;
+  precioMaximoHistorico: number;
   filtrosActivos: FiltrosState;
   onToggleMarca: (marca: string) => void;
   onSetFiltroUnico: <K extends keyof FiltrosState>(
@@ -36,6 +40,8 @@ interface FilterContentProps {
 const FilterContent = ({
   categoriasDisponibles,
   marcasDisponibles,
+  precioMinimoHistorico,
+  precioMaximoHistorico,
   filtrosActivos,
   onToggleMarca,
   onSetFiltroUnico,
@@ -102,7 +108,6 @@ const FilterContent = ({
       </h3>
       <div className="flex flex-col gap-3">
         {marcasDisponibles.map((marca) => {
-          // Corrección del BUG: Comparación insensible a mayúsculas
           const isActive = filtrosActivos.marcas.some(
             (m) => m.toLowerCase() === marca.toLowerCase(),
           );
@@ -149,32 +154,61 @@ const FilterContent = ({
       </div>
     </div>
 
-    {/* 4. PRECIO */}
-    <div className="flex flex-col gap-4">
+    {/* 4. PRECIO (Doble Slider) */}
+    <div className="flex flex-col gap-6 bg-slate-50 p-4 rounded-xl border border-slate-100">
       <h3 className="text-xs font-black text-slate-400 uppercase tracking-widest">
-        Precio (ARS)
+        Rango de Precio
       </h3>
-      <div className="flex items-center gap-2">
+
+      {/* Rango Mínimo */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            Desde
+          </span>
+          <span className="text-sm font-bold text-slate-900">
+            ${filtrosActivos.precioMin.toLocaleString("es-AR")}
+          </span>
+        </div>
         <input
-          type="number"
-          placeholder="Min"
+          type="range"
+          min={precioMinimoHistorico}
+          max={filtrosActivos.precioMax} // Tope dinámico: No puede ser mayor al Max
+          step={5000}
           value={filtrosActivos.precioMin}
-          onChange={(e) => onSetFiltroUnico("precioMin", e.target.value)}
-          className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-star-blue"
+          onChange={(e) =>
+            onSetFiltroUnico("precioMin", parseInt(e.target.value))
+          }
+          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-slate-900"
         />
-        <span className="text-slate-400">-</span>
+      </div>
+
+      {/* Rango Máximo */}
+      <div className="flex flex-col gap-3">
+        <div className="flex items-center justify-between">
+          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+            Hasta
+          </span>
+          <span className="text-sm font-bold text-star-blue">
+            ${filtrosActivos.precioMax.toLocaleString("es-AR")}
+          </span>
+        </div>
         <input
-          type="number"
-          placeholder="Max"
+          type="range"
+          min={filtrosActivos.precioMin} // Tope dinámico: No puede ser menor al Min
+          max={precioMaximoHistorico}
+          step={5000}
           value={filtrosActivos.precioMax}
-          onChange={(e) => onSetFiltroUnico("precioMax", e.target.value)}
-          className="w-full bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-star-blue"
+          onChange={(e) =>
+            onSetFiltroUnico("precioMax", parseInt(e.target.value))
+          }
+          className="w-full h-2 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-star-blue"
         />
       </div>
     </div>
 
-    {/* 5. OFERTAS (Movido al final) */}
-    <label className="flex items-center justify-between cursor-pointer group bg-slate-50 p-4 rounded-xl border border-slate-200 transition-colors hover:border-star-red/50 mt-4">
+    {/* 5. OFERTAS */}
+    <label className="flex items-center justify-between cursor-pointer group bg-slate-50 p-4 rounded-xl border border-slate-100 transition-colors hover:border-star-red/50">
       <span className="text-sm font-black text-star-red uppercase tracking-widest">
         Solo Ofertas
       </span>
@@ -202,13 +236,13 @@ export const FilterSidebar = ({
   setFiltros,
   categoriasDisponibles,
   marcasDisponibles,
+  precioMinimoHistorico,
+  precioMaximoHistorico,
 }: FilterSidebarProps) => {
   const toggleMarca = (marca: string) => {
-    // Chequeamos ignorando mayúsculas/minúsculas
     const isActive = filtrosActivos.marcas.some(
       (m) => m.toLowerCase() === marca.toLowerCase(),
     );
-
     const nuevasMarcas = isActive
       ? filtrosActivos.marcas.filter(
           (m) => m.toLowerCase() !== marca.toLowerCase(),
@@ -231,6 +265,8 @@ export const FilterSidebar = ({
         <FilterContent
           categoriasDisponibles={categoriasDisponibles}
           marcasDisponibles={marcasDisponibles}
+          precioMinimoHistorico={precioMinimoHistorico}
+          precioMaximoHistorico={precioMaximoHistorico}
           filtrosActivos={filtrosActivos}
           onToggleMarca={toggleMarca}
           onSetFiltroUnico={updateFiltro}
@@ -261,6 +297,8 @@ export const FilterSidebar = ({
               <FilterContent
                 categoriasDisponibles={categoriasDisponibles}
                 marcasDisponibles={marcasDisponibles}
+                precioMinimoHistorico={precioMinimoHistorico}
+                precioMaximoHistorico={precioMaximoHistorico}
                 filtrosActivos={filtrosActivos}
                 onToggleMarca={toggleMarca}
                 onSetFiltroUnico={updateFiltro}

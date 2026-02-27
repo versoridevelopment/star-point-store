@@ -30,6 +30,10 @@ export interface Product {
   image: string; // Ruta de la imagen (usaremos un placeholder por ahora)
   tags: string[]; // Etiquetas para filtros rápidos
 
+  images?: string[]; // Galería de imágenes secundarias
+  description?: string; // Párrafo de descripción
+  features?: string[]; // Lista de características (ej. "Peso: 365g", "Balance: Alto")
+
   // Especificaciones técnicas (Opcionales dependiendo del producto)
   specs?: {
     peso?: string;

@@ -16,16 +16,24 @@ const CatalogoContent = () => {
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [lastQuery, setLastQuery] = useState(currentQueryString);
-
-  // Nuevo estado para el ordenamiento
   const [orden, setOrden] = useState<string>("destacados");
+
+  // INGENIERÍA: Calculamos los topes de precio reales basados en el inventario actual
+  const minPrecioHistorico = useMemo(
+    () => Math.min(...mockProducts.map((p) => p.discountPrice || p.price)),
+    [],
+  );
+  const maxPrecioHistorico = useMemo(
+    () => Math.max(...mockProducts.map((p) => p.discountPrice || p.price)),
+    [],
+  );
 
   const [filtros, setFiltros] = useState<FiltrosState>({
     categoria: searchParams.get("categoria"),
     marcas: searchParams.get("marca") ? [searchParams.get("marca")!] : [],
     genero: searchParams.get("genero"),
-    precioMin: "",
-    precioMax: "",
+    precioMin: minPrecioHistorico, // Arranca en el piso
+    precioMax: maxPrecioHistorico, // Arranca en el techo
     soloOfertas: searchParams.get("ofertas") === "true",
   });
 
@@ -34,8 +42,8 @@ const CatalogoContent = () => {
       categoria: searchParams.get("categoria"),
       marcas: searchParams.get("marca") ? [searchParams.get("marca")!] : [],
       genero: searchParams.get("genero"),
-      precioMin: "",
-      precioMax: "",
+      precioMin: minPrecioHistorico,
+      precioMax: maxPrecioHistorico,
       soloOfertas: searchParams.get("ofertas") === "true",
     });
     setLastQuery(currentQueryString);
@@ -57,48 +65,39 @@ const CatalogoContent = () => {
       const cumpleCategoria = filtros.categoria
         ? producto.category.toLowerCase() === filtros.categoria.toLowerCase()
         : true;
-
       const cumpleMarca =
         filtros.marcas.length > 0
           ? filtros.marcas.some(
               (m) => m.toLowerCase() === producto.brand.toLowerCase(),
             )
           : true;
-
       const cumpleOfertas = filtros.soloOfertas
         ? producto.discountPrice !== undefined
         : true;
-
       const cumpleGenero = filtros.genero
         ? producto.tags?.some(
             (tag) => tag.toLowerCase() === filtros.genero?.toLowerCase(),
           )
         : true;
 
-      // Lógica de Precio
+      // Filtro por Rango de Precios
       const precioFinal = producto.discountPrice || producto.price;
-      const min = parseFloat(filtros.precioMin);
-      const max = parseFloat(filtros.precioMax);
-
-      const cumplePrecioMin = !isNaN(min) ? precioFinal >= min : true;
-      const cumplePrecioMax = !isNaN(max) ? precioFinal <= max : true;
+      const cumplePrecio =
+        precioFinal >= filtros.precioMin && precioFinal <= filtros.precioMax;
 
       return (
         cumpleCategoria &&
         cumpleMarca &&
         cumpleOfertas &&
         cumpleGenero &&
-        cumplePrecioMin &&
-        cumplePrecioMax
+        cumplePrecio
       );
     });
   }, [filtros]);
 
   // 2. ORDENAMIENTO
   const productosOrdenados = useMemo(() => {
-    // Hacemos una copia para no mutar el array original
     const filtrados = [...productosFiltrados];
-
     return filtrados.sort((a, b) => {
       const precioA = a.discountPrice || a.price;
       const precioB = b.discountPrice || b.price;
@@ -113,10 +112,9 @@ const CatalogoContent = () => {
         case "z-a":
           return b.name.localeCompare(a.name);
         case "nuevos":
-          // Asumiendo que "isNew" es booleano, ponemos los verdaderos primero
           return a.isNew === b.isNew ? 0 : a.isNew ? -1 : 1;
         default:
-          return 0; // "destacados" mantiene el orden original de la base de datos
+          return 0;
       }
     });
   }, [productosFiltrados, orden]);
@@ -130,10 +128,11 @@ const CatalogoContent = () => {
         setFiltros={setFiltros}
         categoriasDisponibles={categoriasDisponibles}
         marcasDisponibles={marcasDisponibles}
+        precioMinimoHistorico={minPrecioHistorico}
+        precioMaximoHistorico={maxPrecioHistorico}
       />
 
       <div className="flex flex-col flex-1 w-full min-w-0">
-        {/* BARRA SUPERIOR DE HERRAMIENTAS (Contador + Orden + Filtro Móvil) */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-200">
           <span className="text-sm font-bold text-slate-500">
             {productosOrdenados.length}{" "}
@@ -141,7 +140,6 @@ const CatalogoContent = () => {
           </span>
 
           <div className="flex items-center gap-3">
-            {/* SELECTOR DE ORDENAMIENTO */}
             <div className="relative flex items-center bg-white border border-slate-200 rounded-lg px-3 py-1.5 focus-within:border-star-blue focus-within:ring-1 focus-within:ring-star-blue transition-all">
               <ArrowUpDown className="w-4 h-4 text-slate-400 mr-2" />
               <select
@@ -167,7 +165,6 @@ const CatalogoContent = () => {
           </div>
         </div>
 
-        {/* GRILLA DE PRODUCTOS */}
         {productosOrdenados.length > 0 ? (
           <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
             {productosOrdenados.map((producto) => (
@@ -184,7 +181,7 @@ const CatalogoContent = () => {
             </h3>
             <p className="text-slate-500 font-medium text-sm max-w-md mb-6">
               No encontramos productos que coincidan con todos estos filtros
-              juntos. Probá desactivando algunos.
+              juntos. Probá desactivando algunos o ampliando el rango de precio.
             </p>
             <button
               onClick={() =>
@@ -192,8 +189,8 @@ const CatalogoContent = () => {
                   categoria: null,
                   marcas: [],
                   genero: null,
-                  precioMin: "",
-                  precioMax: "",
+                  precioMin: minPrecioHistorico,
+                  precioMax: maxPrecioHistorico,
                   soloOfertas: false,
                 })
               }
