@@ -21,7 +21,7 @@ export const HeroVideo = () => {
             - iv_load_policy=3: Oculta anotaciones y tarjetas.
             - start=3: NUEVO. Inicia el video a los 3 segundos para saltar introducciones.
           */
-          src="https://www.youtube.com/embed/0n_ZBeysGB8?autoplay=1&mute=1&controls=0&loop=1&playlist=0n_ZBeysGB8&playsinline=1&rel=0&showinfo=0&disablekb=1&fs=0&iv_load_policy=3&start=3"
+          src="https://www.youtube.com/embed/0n_ZBeysGB8?autoplay=1&mute=1&controls=0&loop=1&playlist=0n_ZBeysGB8&playsinline=1&rel=0&showinfo=0&disablekb=1&fs=0&iv_load_policy=3&start=4"
           allow="autoplay; encrypted-media"
           title="Video de presentación Star Point"
           /* EL TRUCO DE ESCALADO CSS PARA SIMULAR "object-cover":
