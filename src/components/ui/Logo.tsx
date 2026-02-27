@@ -23,7 +23,7 @@ export const Logo = ({ className, onClick }: LogoProps) => {
         </span>
       </div>
       {/* Store sutil con el gradiente solicitado */}
-      <span className="ml-1 mt-0.5 text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] bg-gradient-to-r from-star-yellow to-star-red text-transparent bg-clip-text">
+      <span className="ml-3 mt-0.5 text-[8px] md:text-[9px] font-bold uppercase tracking-[0.2em] bg-gradient-to-r from-star-yellow to-star-red text-transparent bg-clip-text">
         Store
       </span>
     </Link>
